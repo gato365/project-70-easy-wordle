@@ -3,7 +3,9 @@ import random
 
 
 # List of five-letter words
-word_list = ['apple', 'alert', 'angle', 'baker', 'board', 'brain']
+with open("five_letter_words.txt", "r") as file:
+    word_list = [word.strip().lower() for word in file]
+# word_list = ['apple', 'alert', 'angle', 'baker', 'board', 'brain']
 
 # Function to choose a random word from the list
 def get_random_word(word_list):
