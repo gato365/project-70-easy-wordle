@@ -1,5 +1,31 @@
+// // Fetch the text file located one directory up
+// fetch('../five_letter_words.txt')
+//   .then(response => {
+//     // Check if the request was successful
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+//     return response.text();
+//   })
+//   .then(text => {
+//     // Split the text into an array of words
+//     const words = text.split('\n');
+//     // Generate a random index based on the number of words
+//     const randomIndex = Math.floor(Math.random() * words.length);
+//     // Select a random word and trim whitespace
+//     const answer = words[randomIndex].trim();
+//     // Example usage of the selected word
+//     console.log(answer); // Log the answer to the console
+//   })
+//   .catch(error => {
+//     // Log any errors that occur during the fetch operation
+//     console.error('Error fetching the text file:', error);
+//   });
+
 const answer = "benny"; // For demonstration, typically fetched from server or generated
 let attempts = 6;
+// const answer = "benny"; // For demonstration, typically fetched from server or generated
+// let attempts = 6;
 
 function submitGuess() {
     let guess = document.getElementById('guessInput').value.toLowerCase();
