@@ -9,8 +9,11 @@
 <body>
     <div id="game">
         <h1>Wordle Clone</h1>
-        <input type="text" id="guessInput" maxlength="5">
+        <!-- Turn off auto text  -->
+        <input type="text" id="guessInput" maxlength="5" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         <button onclick="submitGuess()">Guess</button>
+        <div id="attemptsLeft"></div>
+        <div id="attemptedWords"></div> <!-- New div for attempted words -->
         <div id="feedback"></div>
         <div id="attemptsLeft"></div>
     </div>

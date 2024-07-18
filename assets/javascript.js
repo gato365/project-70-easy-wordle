@@ -42,6 +42,11 @@ function submitGuess() {
         letterCounts[letter] = (letterCounts[letter] || 0) + 1;
     }
 
+
+     // Update the attempted words display
+     let attemptedWordsDiv = document.getElementById('attemptedWords');
+     attemptedWordsDiv.textContent += guess + "\n"; // Append the new guess to the list of attempted words
+
     // First pass to assign green tiles
     for (let i = 0; i < 5; i++) {
         if (guess[i] === answer[i]) {
