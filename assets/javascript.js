@@ -73,11 +73,13 @@ function submitGuess() {
   let feedback = calculateFeedback(guess, answer);
   
   // Display feedback
-  document.getElementById('feedback').innerHTML = feedback;
+  document.getElementById('feedback').innerHTML += feedback + "<br>";
 
   // Decrement attempts
   attempts--;
   document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
+
+
 
   // Update attempted words display
   let attemptedWordsDiv = document.getElementById('attemptedWords');
