@@ -71,7 +71,7 @@ function submitGuess() {
   let guess = document.getElementById('guessInput').value.toLowerCase();
   let answer = words[currentWordIndex];
   let feedback = calculateFeedback(guess, answer);
-  
+  ``
   // Display feedback
   document.getElementById('feedback').innerHTML += feedback + "<br>";
 
