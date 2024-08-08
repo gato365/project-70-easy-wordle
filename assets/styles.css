@@ -36,3 +36,79 @@ input, button {
 #sessionInfo {
     display: none; /* Initially hide the textbox */
 }
+.styled-textarea {
+    width: 100%;
+    max-width: 600px;
+    height: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    resize: vertical;
+}
+
+
+/* General button styling */
+button {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 15px 32px; /* Some padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make the buttons appear inline */
+    font-size: 16px; /* Increase font size */
+    margin: 4px 2px; /* Some margin */
+    cursor: pointer; /* Pointer/hand icon */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+/* Hover effect for buttons */
+button:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Specific styling for the start button */
+#startButton {
+    background-color: #008CBA; /* Blue background */
+}
+
+/* Hover effect for the start button */
+#startButton:hover {
+    background-color: #007bb5; /* Darker blue */
+}
+
+/* Specific styling for the restart button */
+#restartButton {
+    background-color: #f44336; /* Red background */
+}
+
+/* Hover effect for the restart button */
+#restartButton:hover {
+    background-color: #da190b; /* Darker red */
+}
+
+/* Styling for the input field */
+#guessInput {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    width: calc(100% - 24px); /* Full width minus padding */
+}
+
+/* Styling for the textarea */
+.styled-textarea {
+    width: calc(100% - 24px); /* Full width minus padding */
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-top: 10px;
+}
