@@ -26,10 +26,30 @@ document.getElementById('guessInput').addEventListener('input', function() {
   this.value = this.value.toLowerCase();
 });
 
+
+
+
+
+
+
+
+
+// // Create an array with 10 five-letter college-related terms
+// words = ["Beach", "Coast", "Ocean", "Class", "Coach", "Field", "Study", "Teach", "Horse", "Stang", "Sport", "Learn", "Doing"];
+
+
+
+// // Shuffle the words array
+// words = shuffleWords(words);
+
+
+
+
+
 // Function to start the game
 function startGame() {
   // Initialize game variables
-  attempts = 3;
+  attempts = 6;
   attemptsList = [];
   currentWordIndex = Math.floor(Math.random() * words.length);
 
