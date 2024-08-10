@@ -1,9 +1,10 @@
 let words = [];
+let word_list = [];
 let attemptsList = []; // Initialize an empty list to store attempts
 let currentWordIndex = 0;
 let startTime, endTime;
 
-// Load the words into the game
+//Load the words into the game
 fetch('../five_letter_words.txt')
   .then(response => response.text())
   .then(text => {
@@ -12,6 +13,13 @@ fetch('../five_letter_words.txt')
     console.log("Words loaded and shuffled.");
   })
   .catch(error => console.error('Error loading words:', error));
+
+
+
+  function isValidWord(word) {
+    return word_list.includes(word);
+  }
+  
 
 // Function to shuffle the words array
 function shuffleWords() {
@@ -28,20 +36,14 @@ document.getElementById('guessInput').addEventListener('input', function() {
 
 
 
-
-
-
-
-
-
-// // Create an array with 10 five-letter college-related terms
-// words = ["Beach", "Coast", "Ocean", "Class", "Coach", "Field", "Study", "Teach", "Horse", "Stang", "Sport", "Learn", "Doing"];
-
-
-
-// // Shuffle the words array
-// words = shuffleWords(words);
-
+// Create an array with 10 five-letter college-related terms
+words = ["Beach", "Coast", "Ocean", "Class", "Coach", 
+        "Field", "Study", "Teach", "Horse", "Sport",
+         "Learn", ];
+shuffleWords();
+console.log(words);
+// Convert all words to lowercase
+words = words.map(word => word.toLowerCase());
 
 
 
@@ -89,6 +91,15 @@ document.getElementById('restartButton').addEventListener('click', restartGame);
 // Update the submitGuess function to show the restart button when the game is finished
 function submitGuess() {
   let guess = document.getElementById('guessInput').value.toLowerCase();
+
+  // Check if the guess is a valid word
+  // if (!isValidWord(guess)) {
+  //   alert("The word is not in the word list. Please try again.");
+  //   return;
+  // }
+
+
+
   let answer = words[currentWordIndex];
   let feedback = calculateFeedback(guess, answer);
   ``
