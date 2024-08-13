@@ -16,9 +16,9 @@ fetch('../five_letter_words.txt')
 
 
 
-  function isValidWord(word) {
-    return word_list.includes(word);
-  }
+  // function isValidWord(word) {
+  //   return word_list.includes(word);
+  // }
   
 
 // Function to shuffle the words array
@@ -36,14 +36,14 @@ document.getElementById('guessInput').addEventListener('input', function() {
 
 
 
-// Create an array with 10 five-letter college-related terms
-words = ["Beach", "Coast", "Ocean", "Class", "Coach", 
-        "Field", "Study", "Teach", "Horse", "Sport",
-         "Learn", ];
-shuffleWords();
-console.log(words);
-// Convert all words to lowercase
-words = words.map(word => word.toLowerCase());
+// // Create an array with 10 five-letter college-related terms
+// words = ["Beach", "Coast", "Ocean", "Class", "Coach", 
+//         "Field", "Study", "Teach", "Horse", "Sport",
+//          "Learn", ];
+// shuffleWords();
+// console.log(words);
+// // Convert all words to lowercase
+// words = words.map(word => word.toLowerCase());
 
 
 
@@ -101,8 +101,9 @@ function submitGuess() {
 
 
   let answer = words[currentWordIndex];
+  console.log(answer);
   let feedback = calculateFeedback(guess, answer);
-  ``
+  
   // Display feedback
   document.getElementById('feedback').innerHTML += feedback + "<br>";
 
