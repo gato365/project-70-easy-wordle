@@ -4,6 +4,22 @@ let attemptsList = []; // Initialize an empty list to store attempts
 let currentWordIndex = 0;
 let startTime, endTime;
 
+
+// Add event listeners to the start and restart buttons
+document.getElementById('startButton').addEventListener('click', startGame);
+document.getElementById('restartButton').addEventListener('click', restartGame);
+document.getElementById('guessInput').addEventListener('keypress', function(event) {
+    if (event.key === "Enter") {
+        submitGuess();
+    }
+});
+
+// Add event listener to convert input to lowercase as the user types
+document.getElementById('guessInput').addEventListener('input', function() {
+  this.value = this.value.toLowerCase();
+});
+
+
 //Load the words into the game
 fetch('../five_letter_words.txt')
   .then(response => response.text())
@@ -15,12 +31,6 @@ fetch('../five_letter_words.txt')
   .catch(error => console.error('Error loading words:', error));
 
 
-
-  // function isValidWord(word) {
-  //   return word_list.includes(word);
-  // }
-  
-
 // Function to shuffle the words array
 function shuffleWords() {
   for (let i = words.length - 1; i > 0; i--) {
@@ -29,10 +39,6 @@ function shuffleWords() {
   }
 }
 
-// Add event listener to convert input to lowercase as the user types
-document.getElementById('guessInput').addEventListener('input', function() {
-  this.value = this.value.toLowerCase();
-});
 
 
 
@@ -55,6 +61,9 @@ function startGame() {
   attemptsList = [];
   currentWordIndex = Math.floor(Math.random() * words.length);
 
+
+  console.log("Start Game Function");
+
   // Hide the start button and show the guess input and submit button
   document.getElementById('startButton').style.display = 'none';
   document.getElementById('guessInput').style.display = 'block';
@@ -75,6 +84,8 @@ function restartGame() {
   document.getElementById('restartButton').style.display = 'none';
   document.getElementById('startButton').style.display = 'block';
 
+
+  
   // Hide the guess input and submit button
   document.getElementById('guessInput').style.display = 'none';
   document.getElementById('submitGuessButton').style.display = 'none';
@@ -84,9 +95,6 @@ function restartGame() {
   document.getElementById('attemptedWords').innerHTML = '';
 }
 
-// Add event listeners to the start and restart buttons
-document.getElementById('startButton').addEventListener('click', startGame);
-document.getElementById('restartButton').addEventListener('click', restartGame);
 
 // Update the submitGuess function to show the restart button when the game is finished
 function submitGuess() {
@@ -98,8 +106,8 @@ function submitGuess() {
   //   return;
   // }
 
-
-
+  console.log("Submit Guess Function");
+ 
   let answer = words[currentWordIndex];
   console.log(answer);
   let feedback = calculateFeedback(guess, answer);
@@ -171,12 +179,6 @@ function moveToNextWord() {
     document.getElementById('attemptedWords').innerHTML = "";
     document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
 }
-
-document.getElementById('guessInput').addEventListener('keypress', function(event) {
-    if (event.key === "Enter") {
-        submitGuess();
-    }
-});
 
 
 
