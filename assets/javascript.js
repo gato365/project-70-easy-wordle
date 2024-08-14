@@ -43,9 +43,26 @@ function shuffleWords() {
 
 
 // // Create an array with 10 five-letter college-related terms
-words = ["Beach", "Coast", "Ocean", "Class", "Coach", 
-        "Field", "Study", "Teach", "Horse", "Sport",
-         "Learn", ];
+words = [
+  // Easy words
+  "beach", // Easy - we live near the beach
+  "coast", // Easy - We live on the coast
+  "horse", // easy - our mascot
+  "learn", // Easy in our motto
+
+  // Medium words
+  "nudge", // Medium as it's less common but easy to guess
+  "fiber", // Medium due to familiar but less frequent letters
+  "mayor", // Medium as a known word but with slightly unusual letter combo
+  "ghost", // Medium, common word but starting 'gh' might be tricky
+
+  // Hard words
+  "lapel", // Hard, less common word with uncommon letter pattern
+  "frack", // Hard, slang and not widely known
+  "heath", // Hard, common in literature but less so in daily use
+  "uncap" // Hard, not a frequently used word
+];
+
 shuffleWords();
 console.log(words);
 // Convert all words to lowercase
