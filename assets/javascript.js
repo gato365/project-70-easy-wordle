@@ -21,7 +21,7 @@ document.getElementById('guessInput').addEventListener('input', function() {
 
 
 //Load the words into the game
-fetch('../five_letter_words.txt')
+fetch('five_letter_words.txt')
   .then(response => response.text())
   .then(text => {
     words = text.split('\n').map(word => word.trim());
