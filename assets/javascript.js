@@ -20,15 +20,15 @@ document.getElementById('guessInput').addEventListener('input', function() {
 });
 
 
-//Load the words into the game
-fetch('five_letter_words.txt')
-  .then(response => response.text())
-  .then(text => {
-    words = text.split('\n').map(word => word.trim());
-    shuffleWords();
-    console.log("Words loaded and shuffled.");
-  })
-  .catch(error => console.error('Error loading words:', error));
+// //Load the words into the game
+// fetch('../five_letter_words.txt')
+//   .then(response => response.text())
+//   .then(text => {
+//     words = text.split('\n').map(word => word.trim());
+//     shuffleWords();
+//     console.log("Words loaded and shuffled.");
+//   })
+//   .catch(error => console.error('Error loading words:', error));
 
 
 // Function to shuffle the words array
@@ -43,13 +43,13 @@ function shuffleWords() {
 
 
 // // Create an array with 10 five-letter college-related terms
-// words = ["Beach", "Coast", "Ocean", "Class", "Coach", 
-//         "Field", "Study", "Teach", "Horse", "Sport",
-//          "Learn", ];
-// shuffleWords();
-// console.log(words);
-// // Convert all words to lowercase
-// words = words.map(word => word.toLowerCase());
+words = ["Beach", "Coast", "Ocean", "Class", "Coach", 
+        "Field", "Study", "Teach", "Horse", "Sport",
+         "Learn", ];
+shuffleWords();
+console.log(words);
+// Convert all words to lowercase
+words = words.map(word => word.toLowerCase());
 
 
 
