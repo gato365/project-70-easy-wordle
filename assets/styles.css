@@ -112,3 +112,19 @@ button:hover {
     border-radius: 4px;
     margin-top: 10px;
 }
+
+
+
+/* Add this to your CSS */
+.green, .yellow, .gray {
+    font-size: 48px; /* Bigger text */
+    font-weight: bold; /* Make it bold for better visibility */
+}
+
+.yellow {
+    color: #e79c1b; /* Darker yellow */
+}
+
+.gray {
+    color: #776363; /* Dark gray */
+}

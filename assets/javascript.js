@@ -1,23 +1,3 @@
-let words = [];
-let word_list = [];
-let attemptsList = []; // Initialize an empty list to store attempts
-let currentWordIndex = 0;
-let startTime, endTime;
-
-
-// Add event listeners to the start and restart buttons
-document.getElementById('startButton').addEventListener('click', startGame);
-document.getElementById('restartButton').addEventListener('click', restartGame);
-document.getElementById('guessInput').addEventListener('keypress', function(event) {
-    if (event.key === "Enter") {
-        submitGuess();
-    }
-});
-
-// Add event listener to convert input to lowercase as the user types
-document.getElementById('guessInput').addEventListener('input', function() {
-  this.value = this.value.toLowerCase();
-});
 
 
 // //Load the words into the game
@@ -31,7 +11,35 @@ document.getElementById('guessInput').addEventListener('input', function() {
 //   .catch(error => console.error('Error loading words:', error));
 
 
-// Function to shuffle the words array
+let words = [
+  "beach", "coast", "horse", "learn",
+  "nudge", "fiber", "mayor", "ghost",
+  "lapel", "frack", "audio", "uncap"
+];
+let attemptsList = [];
+let currentWordIndex = 0;
+let attempts = 6;
+let startTime, endTime;
+
+document.getElementById('startButton').addEventListener('click', startGame);
+document.getElementById('restartButton').addEventListener('click', restartGame);
+document.getElementById('guessInput').addEventListener('keypress', function(event) {
+    if (event.key === "Enter") {
+        submitGuess();
+    }
+});
+
+document.getElementById('guessInput').addEventListener('input', function() {
+  this.value = this.value.toLowerCase();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  let displayElement = document.getElementById('feedback');
+  if (displayElement) {
+      displayElement.innerHTML = '';
+  }
+});
+
 function shuffleWords() {
   for (let i = words.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -39,71 +47,32 @@ function shuffleWords() {
   }
 }
 
-
-
-
-// // Create an array with 10 five-letter college-related terms
-words = [
-  // Easy words
-  "beach", // Easy - we live near the beach
-  "coast", // Easy - We live on the coast
-  "horse", // easy - our mascot
-  "learn", // Easy in our motto
-
-  // Medium words
-  "nudge", // Medium as it's less common but easy to guess
-  "fiber", // Medium due to familiar but less frequent letters
-  "mayor", // Medium as a known word but with slightly unusual letter combo
-  "ghost", // Medium, common word but starting 'gh' might be tricky
-
-  // Hard words
-  "lapel", // Hard, less common word with uncommon letter pattern
-  "frack", // Hard, slang and not widely known
-  "heath", // Hard, common in literature but less so in daily use
-  "uncap" // Hard, not a frequently used word
-];
-
-shuffleWords();
-console.log(words);
-// Convert all words to lowercase
 words = words.map(word => word.toLowerCase());
+shuffleWords();
 
-
-
-
-// Function to start the game
 function startGame() {
-  // Initialize game variables
   attempts = 6;
   attemptsList = [];
   currentWordIndex = Math.floor(Math.random() * words.length);
 
-
-  console.log("Start Game Function");
-
-  // Hide the start button and show the guess input and submit button
   document.getElementById('startButton').style.display = 'none';
   document.getElementById('guessInput').style.display = 'block';
   document.getElementById('submitGuessButton').style.display = 'block';
 
-  // Reset the session info and attempts left display
   document.getElementById('sessionInfo').value = '';
   document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
   document.getElementById('attemptedWords').innerHTML = '';
+  document.getElementById('feedback').innerHTML = '';
 
-  // Enable the guess input
   document.getElementById('guessInput').disabled = false;
+  
+  startTimer();
 }
 
-// Function to restart the game
 function restartGame() {
-  // Hide the restart button and show the start button
   document.getElementById('restartButton').style.display = 'none';
   document.getElementById('startButton').style.display = 'block';
-
-
   
-  // Hide the guess input and submit button
   document.getElementById('guessInput').style.display = 'none';
   document.getElementById('submitGuessButton').style.display = 'none';
   document.getElementById('sessionInfo').style.display = 'none';
@@ -112,111 +81,95 @@ function restartGame() {
   document.getElementById('attemptedWords').innerHTML = '';
 }
 
-
-// Update the submitGuess function to show the restart button when the game is finished
 function submitGuess() {
   let guess = document.getElementById('guessInput').value.toLowerCase();
-
-  // Check if the guess is a valid word
-  // if (!isValidWord(guess)) {
-  //   alert("The word is not in the word list. Please try again.");
-  //   return;
-  // }
-
-  console.log("Submit Guess Function");
- 
-  let answer = words[currentWordIndex];
-  console.log(answer);
-  let feedback = calculateFeedback(guess, answer);
   
-  // Display feedback
-  document.getElementById('feedback').innerHTML += feedback + "<br>";
+  if (guess.length !== 5) {
+    alert("Please enter a 5-letter word.");
+    return;
+  }
 
-  // Decrement attempts
+  let answer = words[currentWordIndex];
+  calculateAndDisplayFeedback(guess, answer);
+  
   attempts--;
   document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
 
-
-
-  // Update attempted words display
   let attemptedWordsDiv = document.getElementById('attemptedWords');
   attemptedWordsDiv.innerHTML += guess + "<br>";
 
-  // Add the guess to the attempts list
   attemptsList.push(guess);
 
-  // Clear the input field
   document.getElementById('guessInput').value = '';
 
-  // Check if the guess is correct or attempts are exhausted
   if (guess === answer) {
-    alert("Congratulations! You've guessed the word correctly!");
-    document.getElementById('guessInput').disabled = true;
-    showSessionInfo();
-    updateSessionInfo(attempts, attemptsList);
-    document.getElementById('restartButton').style.display = 'block';
+    endGame(true);
   } else if (attempts === 0) {
-    alert(`You've run out of attempts! The correct word was ${answer}.`);
-    document.getElementById('guessInput').disabled = true;
-    showSessionInfo();
-    updateSessionInfo(attempts, attemptsList);
-    document.getElementById('restartButton').style.display = 'block';
+    endGame(false);
   }
 }
 
-function calculateFeedback(guess, answer) {
-    let feedback = "";
-    let letterCounts = {};
-    for (let letter of answer) {
-        letterCounts[letter] = (letterCounts[letter] || 0) + 1;
-    }
-    for (let i = 0; i < 5; i++) {
-        if (guess[i] === answer[i]) {
-            feedback += '🟩';
-            letterCounts[guess[i]] -= 1;
-        } else {
-            feedback += '⬛';
-        }
-    }
-    for (let i = 0; i < 5; i++) {
-        if (feedback[i] === '⬛' && guess[i] in letterCounts && letterCounts[guess[i]] > 0) {
-            feedback = feedback.substring(0, i) + '🟨' + feedback.substring(i + 1);
-            letterCounts[guess[i]] -= 1;
-        }
-    }
-    return feedback;
+function calculateAndDisplayFeedback(guess, answer) {
+  let feedback = Array(5).fill('⬛');
+  let letterCounts = {};
+  let displayElement = document.getElementById('feedback');
+  let htmlContent = "";
+
+  for (let letter of answer) {
+      letterCounts[letter] = (letterCounts[letter] || 0) + 1;
+  }
+
+  for (let i = 0; i < 5; i++) {
+      if (guess[i] === answer[i]) {
+          feedback[i] = '🟩';
+          letterCounts[guess[i]] -= 1;
+      }
+  }
+
+  for (let i = 0; i < 5; i++) {
+      if (guess[i] !== answer[i] && letterCounts[guess[i]] > 0) {
+          feedback[i] = '🟨';
+          letterCounts[guess[i]] -= 1;
+      }
+  }
+
+  for (let i = 0; i < 5; i++) {
+      let colorClass = (feedback[i] === '🟩' ? 'green' : (feedback[i] === '🟨' ? 'yellow' : 'gray'));
+      htmlContent += `<span class="${colorClass}">${guess[i]}</span>`;
+  }
+
+  displayElement.innerHTML += `${htmlContent}<br/>`;
 }
 
-
-
-function moveToNextWord() {
-    currentWordIndex = (currentWordIndex + 1) % words.length;
-    attempts = 6;
-    document.getElementById('feedback').innerHTML = "";
-    document.getElementById('attemptedWords').innerHTML = "";
-    document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
+function endGame(isWin) {
+  document.getElementById('guessInput').disabled = true;
+  showSessionInfo();
+  updateSessionInfo(attempts, attemptsList);
+  document.getElementById('restartButton').style.display = 'block';
+  
+  if (isWin) {
+    alert("Congratulations! You've guessed the word correctly!");
+  } else {
+    alert(`You've run out of attempts! The correct word was ${words[currentWordIndex]}.`);
+  }
 }
-
-
-
-// create the capacity start button that begins the game for the individual
 
 function getUserId() {
-    // Generate a unique user ID using a random number
     return `user-${Math.floor(Math.random() * 1000000)}`;
 }
+
 function updateSessionInfo(attemptsLeft, attemptsList) {
     let sessionInfo = document.getElementById('sessionInfo');
     let currentTime = new Date();
     let timeTaken = endTimer();
-    let attemptsStr = attemptsList.join(', '); // Convert the list of attempts to a string
-    let userId = getUserId(); // Get the unique user ID
+    let attemptsStr = attemptsList.join(', ');
+    let userId = getUserId();
 
     sessionInfo.value += `User ID: ${userId} - Word: ${words[currentWordIndex]} - Attempts: ${6 - attemptsLeft} - Date: ${currentTime.toLocaleDateString()} - Time: ${currentTime.toLocaleTimeString()} - Duration: ${timeTaken} seconds - Sequence Number: ${currentWordIndex + 1} - Guesses: [${attemptsStr}]\n---\n`;
 }
 
 function showSessionInfo() {
-    document.getElementById('sessionInfo').style.display = 'block'; // Make the textbox visible
+    document.getElementById('sessionInfo').style.display = 'block';
 }
 
 function startTimer() {
@@ -225,12 +178,6 @@ function startTimer() {
 
 function endTimer() {
     endTime = new Date();
-    let timeDiff = endTime - startTime; // in ms
-    // strip the ms
-    timeDiff /= 1000;
-
-    // get seconds 
-    let seconds = Math.round(timeDiff);
-    console.log("Time taken: " + seconds + " seconds");
-    return seconds;
+    let timeDiff = (endTime - startTime) / 1000;
+    return Math.round(timeDiff);
 }
