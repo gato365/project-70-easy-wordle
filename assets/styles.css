@@ -121,12 +121,12 @@ button:hover {
   
   .letter-box {
     width: 40px;
-    height: 40px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 5px;
-    font-size: 24px;
+    font-size: 48px;
     border: 2px solid #ccc;
     border-radius: 4px;
   }
@@ -142,7 +142,7 @@ button:hover {
   }
   
   .yellow {
-    background-color: #c9b458;
+    background-color: #BD8B13;
     color: white;
   }
   
