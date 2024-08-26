@@ -81,7 +81,7 @@ function restartGame() {
   document.getElementById('attemptedWords').innerHTML = '';
 }
 
-function submitGuess() {
+function submitGuessOLD() {
   let guess = document.getElementById('guessInput').value.toLowerCase();
   
   if (guess.length !== 5) {
@@ -109,7 +109,7 @@ function submitGuess() {
   }
 }
 
-function calculateAndDisplayFeedback(guess, answer) {
+function calculateAndDisplayFeedbackOLD(guess, answer) {
   let feedback = Array(5).fill('⬛');
   let letterCounts = {};
   let displayElement = document.getElementById('feedback');
@@ -140,6 +140,68 @@ function calculateAndDisplayFeedback(guess, answer) {
 
   displayElement.innerHTML += `${htmlContent}<br/>`;
 }
+
+
+function submitGuess() {
+  let guess = document.getElementById('guessInput').value.toLowerCase();
+
+  if (guess.length !== 5) {
+    alert("Please enter a 5-letter word.");
+    return;
+  }
+
+  let answer = words[currentWordIndex];
+  calculateAndDisplayFeedback(guess, answer);
+
+  attempts--;
+  document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
+  let attemptedWordsDiv = document.getElementById('attemptedWords');
+
+  attemptsList.push(guess);
+  document.getElementById('guessInput').value = '';
+
+  if (guess === answer) {
+    endGame(true);
+  } else if (attempts === 0) {
+    endGame(false);
+  }
+}
+
+
+function calculateAndDisplayFeedback(guess, answer) {
+  let feedback = Array(5).fill('⬛');
+  let letterCounts = {};
+  let displayElement = document.getElementById('feedback');
+  let htmlContent = '<div class="attempt-box">';
+
+  for (let letter of answer) {
+    letterCounts[letter] = (letterCounts[letter] || 0) + 1;
+  }
+
+  for (let i = 0; i < 5; i++) {
+    if (guess[i] === answer[i]) {
+      feedback[i] = '🟩';
+      letterCounts[guess[i]] -= 1;
+    }
+  }
+
+  for (let i = 0; i < 5; i++) {
+    if (guess[i] !== answer[i] && letterCounts[guess[i]] > 0) {
+      feedback[i] = '🟨';
+      letterCounts[guess[i]] -= 1;
+    }
+  }
+
+  for (let i = 0; i < 5; i++) {
+    let colorClass = (feedback[i] === '🟩' ? 'green' : (feedback[i] === '🟨' ? 'yellow' : 'gray'));
+    htmlContent += `<span class="letter-box ${colorClass}">${guess[i]}</span>`;
+  }
+
+  htmlContent += '</div>';
+  displayElement.innerHTML += `${htmlContent}<br/>`;
+}
+
+
 
 function endGame(isWin) {
   document.getElementById('guessInput').disabled = true;
