@@ -22,11 +22,11 @@ input, button {
 }
 
 .green {
-    color: green;
+    color: #154734;
 }
 
 .yellow {
-    color: yellow;
+    color: #BD8B13;
 }
 
 .gray {
@@ -54,7 +54,7 @@ input, button {
 
 /* General button styling */
 button {
-    background-color: #4CAF50; /* Green background */
+    background-color: #154734; /* Green background */
     border: none; /* Remove borders */
     color: white; /* White text */
     padding: 15px 32px; /* Some padding */
@@ -70,17 +70,17 @@ button {
 
 /* Hover effect for buttons */
 button:hover {
-    background-color: #45a049; /* Darker green */
+    background-color: #154734; /* Darker green */
 }
 
 /* Specific styling for the start button */
 #startButton {
-    background-color: #008CBA; /* Blue background */
+    background-color: #5CB8B2; /* Blue background */
 }
 
 /* Hover effect for the start button */
 #startButton:hover {
-    background-color: #007bb5; /* Darker blue */
+    background-color: #5CB8B2; /* Darker blue */
 }
 
 /* Specific styling for the restart button */
@@ -122,7 +122,7 @@ button:hover {
 }
 
 .yellow {
-    color: #e79c1b; /* Darker yellow */
+    color: #BD8B13; /* Darker yellow */
 }
 
 .gray {
