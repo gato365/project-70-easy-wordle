@@ -96,7 +96,7 @@ function submitGuess() {
   document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
 
   let attemptedWordsDiv = document.getElementById('attemptedWords');
-  attemptedWordsDiv.innerHTML += guess + "<br>";
+  
 
   attemptsList.push(guess);
 
