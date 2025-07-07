@@ -68,6 +68,13 @@ button {
     transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 
+
+#header1 {
+    font-size: 72px; /* Increase the font size */
+    color: #271547; /* Green color */
+    margin-bottom: 20px; /* Add some space below the header */
+}
+
 /* Hover effect for buttons */
 button:hover {
     background-color: #154734; /* Darker green */
