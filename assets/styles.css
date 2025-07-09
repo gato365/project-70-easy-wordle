@@ -1,159 +1,143 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 50px;
+/* Container for the grid */
+#board {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* space between rows */
+    align-items: center;
 }
 
-#game {
-    margin: auto;
-    width: 300px;
+/* Each row contains tiles horizontally */
+.row {
+    display: flex;
+    gap: 8px; /* space between tiles */
 }
 
-input, button {
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 16px;
-    width: 95%;
+/* Each tile styling */
+.tile {
+    width: 50px;
+    height: 55px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: white;
+    user-select: none; /* Prevent text selection */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: default;
 }
 
+/* Colored tile backgrounds for feedback */
+.green {
+    background-color: #6aaa64 !important; /* override text color green */
+    color: white !important;
+    border-color: #6aaa64 !important;
+}
+
+.yellow {
+    background-color: #BD8B13 !important;
+    color: white !important;
+    border-color: #BD8B13 !important;
+}
+
+.gray {
+    background-color: #787c7e !important;
+    color: white !important;
+    border-color: #787c7e !important;
+}
+
+/* Center the guessInput and submitGuessButton */
+#guessInput, #submitGuessButton {
+    margin: 10px auto;
+    display: block;
+    width: 260px; /* consistent with board width */
+}
+
+/* Adjust feedback container */
 #feedback {
     margin-top: 20px;
     font-size: 24px;
 }
 
-.green {
-    color: #154734;
+/* Adjust attempts and attemptedWords styling for spacing */
+#attemptsLeft, #attemptedWords {
+    margin-top: 10px;
+    font-weight: bold;
 }
-
-.yellow {
-    color: #BD8B13;
-}
-
-.gray {
-    color: gray;
-}
-
-#sessionInfo {
-    display: none; /* Initially hide the textbox */
-}
-.styled-textarea {
-    width: 100%;
-    max-width: 600px;
-    height: 150px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    resize: vertical;
-}
-
-
-/* General button styling */
-button {
-    background-color: #154734; /* Green background */
-    border: none; /* Remove borders */
-    color: white; /* White text */
-    padding: 15px 32px; /* Some padding */
-    text-align: center; /* Centered text */
-    text-decoration: none; /* Remove underline */
-    display: inline-block; /* Make the buttons appear inline */
-    font-size: 16px; /* Increase font size */
-    margin: 4px 2px; /* Some margin */
-    cursor: pointer; /* Pointer/hand icon */
-    border-radius: 12px; /* Rounded corners */
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
-}
-
 
 #header1 {
-    font-size: 72px; /* Increase the font size */
-    color: #271547; /* Green color */
-    margin-bottom: 20px; /* Add some space below the header */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: Georgia, serif;
+    font-size: 64px;  /* bigger size for STANG */
+    font-weight: bold; /* optional, to make it bolder */
+    letter-spacing: 4px; /* optional, adds spacing between letters */
 }
 
-/* Hover effect for buttons */
-button:hover {
-    background-color: #154734; /* Darker green */
-}
-
-/* Specific styling for the start button */
 #startButton {
-    background-color: #5CB8B2; /* Blue background */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 9999px; /* pill shape */
+    padding: 12px 28px;
+    font-size: 18px;
+    font-family: Arial, sans-serif; /* Arial font */
+    font-weight: normal; /* bold text */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
 }
 
-/* Hover effect for the start button */
 #startButton:hover {
-    background-color: #5CB8B2; /* Darker blue */
+  background-color: #222;
 }
 
-/* Specific styling for the restart button */
-#restartButton {
-    background-color: #f44336; /* Red background */
+#startButton:active {
+  background-color: #111;
+  transform: translateY(1px);
 }
 
-/* Hover effect for the restart button */
-#restartButton:hover {
-    background-color: #da190b; /* Darker red */
+#instructions {
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 30px;
+    color: black;
+    text-align: center;
+    margin: 0; /* space above and below */
 }
 
-/* Styling for the input field */
-#guessInput {
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    width: calc(100% - 24px); /* Full width minus padding */
+body {
+  background-color: #f7f7f7; /* very light gray */
+  margin: 0; /* optional: remove default body margin */
 }
 
-/* Styling for the textarea */
-.styled-textarea {
-    width: calc(100% - 24px); /* Full width minus padding */
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    margin-top: 10px;
+#game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
-.attempt-box {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  
-  .letter-box {
-    width: 40px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 5px;
-    font-size: 48px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-  }
+#logo {
+  display: block;
+  width: 100px; /* or adjust to fit your design */
+  height: 100px;
+}
 
-
-
-
-
-/* New */
-.green {
-    background-color: #6aaa64;
-    color: white;
-  }
-  
-  .yellow {
-    background-color: #BD8B13;
-    color: white;
-  }
-  
-  .gray {
-    background-color: #787c7e;
-    color: white;
-  }
+#dividerLine {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 20px auto;
+    width: 80%;
+}

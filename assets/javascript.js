@@ -10,33 +10,60 @@
 //   })
 //   .catch(error => console.error('Error loading words:', error));
 
+function createBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = ''; // Clear previous board
+
+  for (let row = 0; row < 6; row++) {
+    const rowDiv = document.createElement('div');
+    rowDiv.classList.add('row');
+
+    for (let col = 0; col < 5; col++) {
+      const tile = document.createElement('div');
+      tile.classList.add('tile');
+      tile.setAttribute('id', `tile-${row}-${col}`);
+      rowDiv.appendChild(tile);
+    }
+
+    board.appendChild(rowDiv);
+  }
+}
 
 let words = [
   "beach", "coast", "horse", "learn",
   "nudge", "fiber", "mayor", "ghost",
   "lapel", "frack", "audio", "uncap"
 ];
-let attemptsList = [];
-let currentWordIndex = 0;
+
+words = words.map(word => word.toLowerCase());
+shuffleWords();
+
+let currentGuess = '';
+let currentRow = 0;
+let currentCol = 0;
 let attempts = 6;
+let currentWordIndex = 0;
+let attemptsList = [];
 let startTime, endTime;
 
 document.getElementById('startButton').addEventListener('click', startGame);
 document.getElementById('restartButton').addEventListener('click', restartGame);
-document.getElementById('guessInput').addEventListener('keypress', function(event) {
-    if (event.key === "Enter") {
-        submitGuess();
-    }
-});
 
-document.getElementById('guessInput').addEventListener('input', function() {
-  this.value = this.value.toLowerCase();
-});
+document.addEventListener('keydown', function (event) {
+  if (attempts === 0 || currentRow >= 6) return;
 
-document.addEventListener('DOMContentLoaded', function () {
-  let displayElement = document.getElementById('feedback');
-  if (displayElement) {
-      displayElement.innerHTML = '';
+  const key = event.key.toLowerCase();
+
+  if (key === 'backspace' && currentCol > 0) {
+    currentCol--;
+    currentGuess = currentGuess.slice(0, -1);
+    document.getElementById(`tile-${currentRow}-${currentCol}`).textContent = '';
+  } else if (/^[a-z]$/.test(key) && currentCol < 5) {
+    document.getElementById(`tile-${currentRow}-${currentCol}`).textContent = key.toUpperCase();
+    currentGuess += key;
+    currentCol++;
+  } else if (key === 'enter' && currentCol === 5) {
+    submitGridGuess();
   }
 });
 
@@ -47,132 +74,46 @@ function shuffleWords() {
   }
 }
 
-words = words.map(word => word.toLowerCase());
-shuffleWords();
-
 function startGame() {
   attempts = 6;
   attemptsList = [];
+  currentGuess = '';
+  currentRow = 0;
+  currentCol = 0;
   currentWordIndex = Math.floor(Math.random() * words.length);
 
   document.getElementById('startButton').style.display = 'none';
-  document.getElementById('guessInput').style.display = 'block';
-  document.getElementById('submitGuessButton').style.display = 'block';
-
+  document.getElementById('restartButton').style.display = 'none';
+  document.getElementById('feedback').innerHTML = '';
   document.getElementById('sessionInfo').value = '';
   document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
   document.getElementById('attemptedWords').innerHTML = '';
-  document.getElementById('feedback').innerHTML = '';
-
+  document.getElementById('sessionInfo').style.display = 'none';
   document.getElementById('guessInput').disabled = false;
-  
+
+  createBoard();
   startTimer();
 }
 
 function restartGame() {
   document.getElementById('restartButton').style.display = 'none';
   document.getElementById('startButton').style.display = 'block';
-  
-  document.getElementById('guessInput').style.display = 'none';
-  document.getElementById('submitGuessButton').style.display = 'none';
-  document.getElementById('sessionInfo').style.display = 'none';
+  document.getElementById('board').innerHTML = '';
   document.getElementById('feedback').innerHTML = '';
-  document.getElementById('attemptsLeft').textContent = '';
   document.getElementById('attemptedWords').innerHTML = '';
+  document.getElementById('attemptsLeft').textContent = '';
+  document.getElementById('sessionInfo').style.display = 'none';
 }
 
-function submitGuessOLD() {
-  let guess = document.getElementById('guessInput').value.toLowerCase();
-  
-  if (guess.length !== 5) {
-    alert("Please enter a 5-letter word.");
-    return;
-  }
+function submitGridGuess() {
+  const guess = currentGuess.toLowerCase();
+  if (guess.length !== 5) return;
 
-  let answer = words[currentWordIndex];
-  calculateAndDisplayFeedback(guess, answer);
-  
-  attempts--;
-  document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
-
-  let attemptedWordsDiv = document.getElementById('attemptedWords');
-  
-
+  const answer = words[currentWordIndex];
   attemptsList.push(guess);
 
-  document.getElementById('guessInput').value = '';
-
-  if (guess === answer) {
-    endGame(true);
-  } else if (attempts === 0) {
-    endGame(false);
-  }
-}
-
-function calculateAndDisplayFeedbackOLD(guess, answer) {
-  let feedback = Array(5).fill('⬛');
-  let letterCounts = {};
-  let displayElement = document.getElementById('feedback');
-  let htmlContent = "";
-
-  for (let letter of answer) {
-      letterCounts[letter] = (letterCounts[letter] || 0) + 1;
-  }
-
-  for (let i = 0; i < 5; i++) {
-      if (guess[i] === answer[i]) {
-          feedback[i] = '🟩';
-          letterCounts[guess[i]] -= 1;
-      }
-  }
-
-  for (let i = 0; i < 5; i++) {
-      if (guess[i] !== answer[i] && letterCounts[guess[i]] > 0) {
-          feedback[i] = '🟨';
-          letterCounts[guess[i]] -= 1;
-      }
-  }
-
-  for (let i = 0; i < 5; i++) {
-      let colorClass = (feedback[i] === '🟩' ? 'green' : (feedback[i] === '🟨' ? 'yellow' : 'gray'));
-      htmlContent += `<span class="${colorClass}">${guess[i]}</span>`;
-  }
-
-  displayElement.innerHTML += `${htmlContent}<br/>`;
-}
-
-
-function submitGuess() {
-  let guess = document.getElementById('guessInput').value.toLowerCase();
-
-  if (guess.length !== 5) {
-    alert("Please enter a 5-letter word.");
-    return;
-  }
-
-  let answer = words[currentWordIndex];
-  calculateAndDisplayFeedback(guess, answer);
-
-  attempts--;
-  document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
-  let attemptedWordsDiv = document.getElementById('attemptedWords');
-
-  attemptsList.push(guess);
-  document.getElementById('guessInput').value = '';
-
-  if (guess === answer) {
-    endGame(true);
-  } else if (attempts === 0) {
-    endGame(false);
-  }
-}
-
-
-function calculateAndDisplayFeedback(guess, answer) {
-  let feedback = Array(5).fill('⬛');
-  let letterCounts = {};
-  let displayElement = document.getElementById('feedback');
-  let htmlContent = '<div class="attempt-box">';
+  const feedback = Array(5).fill('gray');
+  const letterCounts = {};
 
   for (let letter of answer) {
     letterCounts[letter] = (letterCounts[letter] || 0) + 1;
@@ -180,66 +121,73 @@ function calculateAndDisplayFeedback(guess, answer) {
 
   for (let i = 0; i < 5; i++) {
     if (guess[i] === answer[i]) {
-      feedback[i] = '🟩';
-      letterCounts[guess[i]] -= 1;
+      feedback[i] = 'green';
+      letterCounts[guess[i]]--;
     }
   }
 
   for (let i = 0; i < 5; i++) {
     if (guess[i] !== answer[i] && letterCounts[guess[i]] > 0) {
-      feedback[i] = '🟨';
-      letterCounts[guess[i]] -= 1;
+      feedback[i] = 'yellow';
+      letterCounts[guess[i]]--;
     }
   }
 
   for (let i = 0; i < 5; i++) {
-    let colorClass = (feedback[i] === '🟩' ? 'green' : (feedback[i] === '🟨' ? 'yellow' : 'gray'));
-    htmlContent += `<span class="letter-box ${colorClass}">${guess[i]}</span>`;
+    const tile = document.getElementById(`tile-${currentRow}-${i}`);
+    tile.classList.add(feedback[i]);
   }
 
-  htmlContent += '</div>';
-  displayElement.innerHTML += `${htmlContent}<br/>`;
+  attempts--;
+  document.getElementById('attemptsLeft').textContent = `You have ${attempts} attempts left.`;
+
+  if (guess === answer) {
+    endGame(true);
+  } else if (attempts === 0 || currentRow === 5) {
+    endGame(false);
+  } else {
+    currentRow++;
+    currentCol = 0;
+    currentGuess = '';
+  }
 }
-
-
 
 function endGame(isWin) {
   document.getElementById('guessInput').disabled = true;
+  document.getElementById('restartButton').style.display = 'block';
   showSessionInfo();
   updateSessionInfo(attempts, attemptsList);
-  document.getElementById('restartButton').style.display = 'block';
-  
+
   if (isWin) {
-    alert("Congratulations! You've guessed the word correctly!");
+    alert("🎉 You guessed it!");
   } else {
-    alert(`You've run out of attempts! The correct word was ${words[currentWordIndex]}.`);
+    alert(`❌ The correct word was "${words[currentWordIndex]}"`);
   }
 }
 
-function getUserId() {
-    return `user-${Math.floor(Math.random() * 1000000)}`;
-}
-
-function updateSessionInfo(attemptsLeft, attemptsList) {
-    let sessionInfo = document.getElementById('sessionInfo');
-    let currentTime = new Date();
-    let timeTaken = endTimer();
-    let attemptsStr = attemptsList.join(', ');
-    let userId = getUserId();
-
-    sessionInfo.value += `User ID: ${userId} - Word: ${words[currentWordIndex]} - Attempts: ${6 - attemptsLeft} - Date: ${currentTime.toLocaleDateString()} - Time: ${currentTime.toLocaleTimeString()} - Duration: ${timeTaken} seconds - Sequence Number: ${currentWordIndex + 1} - Guesses: [${attemptsStr}]\n---\n`;
-}
-
-function showSessionInfo() {
-    document.getElementById('sessionInfo').style.display = 'block';
-}
-
 function startTimer() {
-    startTime = new Date();
+  startTime = new Date();
 }
 
 function endTimer() {
-    endTime = new Date();
-    let timeDiff = (endTime - startTime) / 1000;
-    return Math.round(timeDiff);
+  endTime = new Date();
+  return Math.round((endTime - startTime) / 1000);
+}
+
+function getUserId() {
+  return `user-${Math.floor(Math.random() * 1000000)}`;
+}
+
+function updateSessionInfo(attemptsLeft, attemptsList) {
+  const sessionInfo = document.getElementById('sessionInfo');
+  const currentTime = new Date();
+  const timeTaken = endTimer();
+  const attemptsStr = attemptsList.join(', ');
+  const userId = getUserId();
+
+  sessionInfo.value += `User ID: ${userId} - Word: ${words[currentWordIndex]} - Attempts: ${6 - attemptsLeft} - Date: ${currentTime.toLocaleDateString()} - Time: ${currentTime.toLocaleTimeString()} - Duration: ${timeTaken} seconds - Guesses: [${attemptsStr}]\n---\n`;
+}
+
+function showSessionInfo() {
+  document.getElementById('sessionInfo').style.display = 'block';
 }

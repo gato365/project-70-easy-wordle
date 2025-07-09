@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,20 +9,37 @@
 
 <body onload="startTimer()">
     <div id="game">
-        <h1 id = "header1">STANG</h1>
+        <img id="logo" src="assets/logo.png" alt="Game Logo">
+        <h1 id="header1">STANG</h1>
+        <hr id="dividerLine" style="display: none;">
+        <p id="instructions">Get 6 chances to guess<br>a 5-letter word.</p>
         <button id="startButton">Start Game</button>
         <button id="restartButton" style="display: none;">Restart Game</button>
-        <input type="text" id="guessInput" style="display: none;" placeholder="Enter your guess" maxlength="5" autocomplete="off" autocorrect="off" autocapitalize="off"
-        spellcheck="false">
+
+        <div id="board">
+            <!-- Tiles will be dynamically generated here with JavaScript -->
+        </div>
+
+        <input type="text" id="guessInput" style="display: none;" placeholder="Enter your guess" maxlength="5" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         <button id="submitGuessButton" style="display: none;" onclick="submitGuess()">Submit Guess</button>
         <div id="feedback"></div>
         <div id="attemptsLeft"></div>
         <div id="attemptedWords"></div>
         <textarea id="sessionInfo" class="styled-textarea" readonly></textarea>
-
     </div>
+
+    <script>
+        document.getElementById("startButton").addEventListener("click", function () {
+        // Hide the instructions and logo
+        document.getElementById("instructions").style.display = "none";
+        document.getElementById("logo").style.display = "none";
+        document.getElementById("header1").style.marginTop = "0px"; // Adjust as needed
+        document.getElementById("game").style.paddingTop = "0px";
+        document.getElementById("game").style.marginTop = "0px";
+        document.getElementById("dividerLine").style.display = "block";
+        });
+    </script>
 
     <script src="assets/javascript.js"></script>
 </body>
-
 </html>
