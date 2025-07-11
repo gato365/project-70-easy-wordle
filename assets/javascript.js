@@ -1,41 +1,35 @@
-
-
-// //Load the words into the game
+/*******************************************************
+ * 📦 1. Load words from external file (optional)
+ *******************************************************/
+// Uncomment if you want to load from file instead of hardcoded words
 // fetch('../five_letter_words.txt')
 //   .then(response => response.text())
 //   .then(text => {
-//     words = text.split('\n').map(word => word.trim());
+//     allowedWords = text.split('\n').map(word => word.trim().toLowerCase());
 //     shuffleWords();
-//     console.log("Words loaded and shuffled.");
+//     console.log("Allowed words loaded and shuffled.");
 //   })
-//   .catch(error => console.error('Error loading words:', error));
+//   .catch(error => console.error('Error loading allowed words:', error));
 
-function createBoard() {
-  const board = document.getElementById('board');
-  board.innerHTML = ''; // Clear previous board
 
-  for (let row = 0; row < 6; row++) {
-    const rowDiv = document.createElement('div');
-    rowDiv.classList.add('row');
-
-    for (let col = 0; col < 5; col++) {
-      const tile = document.createElement('div');
-      tile.classList.add('tile');
-      tile.setAttribute('id', `tile-${row}-${col}`);
-      rowDiv.appendChild(tile);
-    }
-
-    board.appendChild(rowDiv);
-  }
-}
-
+/*******************************************************
+ * 🗂 2. Data & Initialization
+ *******************************************************/
 let words = [
   "beach", "coast", "horse", "learn",
   "nudge", "fiber", "mayor", "ghost",
   "lapel", "frack", "audio", "uncap"
 ];
 
+// ✅ Add a list of allowed words (can be larger)
+let allowedWords = [
+  "beach", "coast", "horse", "learn", "nudge", "fiber", "mayor", "ghost",
+  "lapel", "frack", "audio", "uncap",
+  // add more real five-letter words as needed
+];
+
 words = words.map(word => word.toLowerCase());
+allowedWords = allowedWords.map(word => word.toLowerCase());
 shuffleWords();
 
 let currentGuess = '';
@@ -46,11 +40,15 @@ let currentWordIndex = 0;
 let attemptsList = [];
 let startTime, endTime;
 
+
+/*******************************************************
+ * ⚙️ 3. Event Listeners & User Input Handling
+ *******************************************************/
 document.getElementById('startButton').addEventListener('click', startGame);
 document.getElementById('restartButton').addEventListener('click', restartGame);
 
 document.addEventListener('keydown', function (event) {
-  if (attempts === 0 || currentRow >= 6) return;
+  if (attempts === 0 || currentRow >= 6) return; // Game over or finished rows
 
   const key = event.key.toLowerCase();
 
@@ -67,6 +65,22 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
+// New: Show/hide top menu when mouse near top
+document.addEventListener('mousemove', function(e) {
+  const topMenu = document.getElementById('topMenu');
+  if (!topMenu) return; // safety check if element missing
+
+  if (e.clientY <= 50) {
+    topMenu.classList.add('visible');
+  } else {
+    topMenu.classList.remove('visible');
+  }
+});
+
+
+/*******************************************************
+ * 🔄 4. Utility Functions (shuffle, timer, etc.)
+ *******************************************************/
 function shuffleWords() {
   for (let i = words.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -74,6 +88,62 @@ function shuffleWords() {
   }
 }
 
+function startTimer() {
+  startTime = new Date();
+}
+
+function endTimer() {
+  endTime = new Date();
+  return Math.round((endTime - startTime) / 1000);
+}
+
+function getUserId() {
+  return `user-${Math.floor(Math.random() * 1000000)}`;
+}
+
+
+/*******************************************************
+ * 🎨 5. UI Creation & Update Functions
+ *******************************************************/
+function createBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  for (let row = 0; row < 6; row++) {
+    const rowDiv = document.createElement('div');
+    rowDiv.classList.add('row');
+
+    for (let col = 0; col < 5; col++) {
+      const tile = document.createElement('div');
+      tile.classList.add('tile');
+      tile.setAttribute('id', `tile-${row}-${col}`);
+      rowDiv.appendChild(tile);
+    }
+
+    board.appendChild(rowDiv);
+  }
+}
+
+function showSessionInfo() {
+  document.getElementById('sessionInfo').style.display = 'block';
+}
+
+function updateSessionInfo(attemptsLeft, attemptsList) {
+  const sessionInfo = document.getElementById('sessionInfo');
+  const currentTime = new Date();
+  const timeTaken = endTimer();
+  const attemptsStr = attemptsList.join(', ');
+  const userId = getUserId();
+
+  // Append with line breaks, keep previous text too
+  sessionInfo.textContent = "Congrats " + `${userId}` + "! 🎉";
+}
+
+
+
+/*******************************************************
+ * 🚀 6. Game Control Functions (start, restart, end)
+ *******************************************************/
 function startGame() {
   attempts = 6;
   attemptsList = [];
@@ -90,6 +160,7 @@ function startGame() {
   document.getElementById('attemptedWords').innerHTML = '';
   document.getElementById('sessionInfo').style.display = 'none';
   document.getElementById('guessInput').disabled = false;
+  document.getElementById('sessionInfo').textContent = '';
 
   createBoard();
   startTimer();
@@ -105,9 +176,33 @@ function restartGame() {
   document.getElementById('sessionInfo').style.display = 'none';
 }
 
+function endGame(isWin) {
+  document.getElementById('guessInput').disabled = true;
+  document.getElementById('restartButton').style.display = 'block';
+  showSessionInfo();
+  updateSessionInfo(attempts, attemptsList);
+
+  if (isWin) {
+    celebrateWin();  // 🎉 confetti only, no alert
+    // alert("🎉 You guessed it!");  <-- removed alert to avoid popup
+  } else {
+    alert(`❌ The correct word was "${words[currentWordIndex]}"`);
+  }
+}
+
+
+/*******************************************************
+ * ✅ 7. Game Logic (check guesses & update feedback)
+ *******************************************************/
 function submitGridGuess() {
   const guess = currentGuess.toLowerCase();
   if (guess.length !== 5) return;
+
+  // ✅ Validate guess against allowedWords
+  if (!allowedWords.includes(guess)) {
+    alert("Not in word list!");
+    return;
+  }
 
   const answer = words[currentWordIndex];
   attemptsList.push(guess);
@@ -152,42 +247,14 @@ function submitGridGuess() {
   }
 }
 
-function endGame(isWin) {
-  document.getElementById('guessInput').disabled = true;
-  document.getElementById('restartButton').style.display = 'block';
-  showSessionInfo();
-  updateSessionInfo(attempts, attemptsList);
 
-  if (isWin) {
-    alert("🎉 You guessed it!");
-  } else {
-    alert(`❌ The correct word was "${words[currentWordIndex]}"`);
-  }
-}
-
-function startTimer() {
-  startTime = new Date();
-}
-
-function endTimer() {
-  endTime = new Date();
-  return Math.round((endTime - startTime) / 1000);
-}
-
-function getUserId() {
-  return `user-${Math.floor(Math.random() * 1000000)}`;
-}
-
-function updateSessionInfo(attemptsLeft, attemptsList) {
-  const sessionInfo = document.getElementById('sessionInfo');
-  const currentTime = new Date();
-  const timeTaken = endTimer();
-  const attemptsStr = attemptsList.join(', ');
-  const userId = getUserId();
-
-  sessionInfo.value += `User ID: ${userId} - Word: ${words[currentWordIndex]} - Attempts: ${6 - attemptsLeft} - Date: ${currentTime.toLocaleDateString()} - Time: ${currentTime.toLocaleTimeString()} - Duration: ${timeTaken} seconds - Guesses: [${attemptsStr}]\n---\n`;
-}
-
-function showSessionInfo() {
-  document.getElementById('sessionInfo').style.display = 'block';
+/*******************************************************
+ * 🎉 Confetti Celebration Function
+ *******************************************************/
+function celebrateWin() {
+  confetti({
+    particleCount: 200,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
 }
